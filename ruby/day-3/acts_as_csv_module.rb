@@ -7,6 +7,17 @@
 # Visit http://www.pragmaticprogrammer.com/titles/btlang for more book information.
 #---
 module ActsAsCsv
+  class CsvRow
+    def initialize(row, headers)
+      @row = row
+      @headers = headers
+    end
+
+    def method_missing(name, *args)
+      @row[@headers.index(name.to_s)]
+    end
+  end
+  
   def self.included(base)
     base.extend ClassMethods
   end
@@ -33,6 +44,12 @@ module ActsAsCsv
     def initialize
       read 
     end
+    
+    def each
+      @csv_contents.each do |row|
+        yield CsvRow.new(row, @headers)
+      end
+    end
   end
 end
 
@@ -41,6 +58,5 @@ class RubyCsv  # no inheritance! You can mix it in
   acts_as_csv
 end
 
-m = RubyCsv.new
-puts m.headers.inspect
-puts m.csv_contents.inspect
+csv = RubyCsv.new
+csv.each {|row| puts row.one}
