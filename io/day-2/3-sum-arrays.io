@@ -4,7 +4,7 @@ values := list(
 )
 
 flatSum := method(xs,
-  xs flatten reduce(+)
+  xs flatten sum
 )
 
 flatSum(values) println
