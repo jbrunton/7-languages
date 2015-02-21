@@ -4,14 +4,7 @@ values := list(
 )
 
 flatSum := method(xs,
-  sum := 0
-  xs foreach(x,
-    if (x type == "List",
-      sum := sum + flatSum(x),
-      sum := sum + x
-    )
-  )
+  xs flatten reduce(+)
 )
 
 flatSum(values) println
-
