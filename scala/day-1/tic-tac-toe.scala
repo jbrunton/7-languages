@@ -15,9 +15,6 @@ class Cell(val value: String) {
 
 object Line {
   val CELL_COUNT = 3;
-  def from(cells: List[Cell]): Line = {
-    new Line(cells)
-  }
 }
 
 class Line(val cells: List[Cell]) {
