@@ -23,7 +23,7 @@ class Line(val cells: List[Cell]) {
   }
   
   def isWinner(player: String): Boolean = {
-    cells.forall(x => x.value == player)
+    cells.forall(cell => cell.value == player)
   }
 }
 
@@ -38,7 +38,7 @@ class Board(val rows: List[Line]) {
   
   def columns: List[Line] = {
     List(0,1,2).map(k => {
-      new Line(rows.map(x => x.cells(k)))
+      new Line(rows.map(row => row.cells(k)))
     })
   }
   
@@ -51,7 +51,7 @@ class Board(val rows: List[Line]) {
   
   def isWinner(player: String): Boolean = {
     val lines = rows ++ columns ++ diagonals
-    lines.exists(x => x.isWinner(player))
+    lines.exists(line => line.isWinner(player))
   }
 }
 
