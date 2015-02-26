@@ -6,11 +6,6 @@ class Cell(val value: String) {
   if (!Cell.VALID_VALUES(value)) {
     throw new Exception("Invalid cell value: " + value)
   }
-
-  override def equals(other: Any):Boolean = other match {
-    case other: Cell => this.value == other.value
-    case _ => false
-  }
 }
 
 object Line {
