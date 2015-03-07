@@ -33,10 +33,10 @@ val urls = List("http://www.amazon.com/",
                "http://www.cnn.com/" )
 
 def timeMethod(method: () => Unit) = {
- val start = System.nanoTime
- method()
- val end = System.nanoTime
- println("Method took " + (end - start)/1000000000.0 + " seconds.")
+  val start = System.nanoTime
+  method()
+  val end = System.nanoTime
+  println("Method took " + (end - start)/1000000000.0 + " seconds.")
 }
 
 def printPageStats(url: String, size: Number, links: Number) = {
@@ -46,26 +46,26 @@ def printPageStats(url: String, size: Number, links: Number) = {
 }
 
 def getPageSizeSequentially() = {
- for(url <- urls) {
-   val (size, links) = PageLoader.getPageStats(url)
-   printPageStats(url, size, links)
- }
+  for(url <- urls) {
+    val (size, links) = PageLoader.getPageStats(url)
+    printPageStats(url, size, links)
+  }
 }
 
 def getPageSizeConcurrently() = {
- val caller = self
+  val caller = self
 
- for(url <- urls) {
-   actor { caller ! (url, PageLoader.getPageStats(url)) }
- }
+  for(url <- urls) {
+    actor { caller ! (url, PageLoader.getPageStats(url)) }
+  }
 
- for(i <- 1 to urls.size) {
-   receive {
-     case (url:String, (size:Number, links:Number)) => {
-       printPageStats(url, size, links)
-     }
-   }
- }
+  for(i <- 1 to urls.size) {
+    receive {
+      case (url:String, (size:Number, links:Number)) => {
+        printPageStats(url, size, links)
+      }
+    }
+  }
 }
 
 println("Sequential run:")
