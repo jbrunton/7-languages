@@ -39,12 +39,16 @@ def timeMethod(method: () => Unit) = {
  println("Method took " + (end - start)/1000000000.0 + " seconds.")
 }
 
+def printPageStats(url: String, size: Number, links: Number) = {
+  println("Stats for " + url + ":")
+  println("  size  = "  + size)
+  println("  links = " + links)  
+}
+
 def getPageSizeSequentially() = {
  for(url <- urls) {
    val (size, links) = PageLoader.getPageStats(url)
-   println("Stats for " + url + ":")
-   println("  size  = "  + size)
-   println("  links = " + links)
+   printPageStats(url, size, links)
  }
 }
 
@@ -57,11 +61,9 @@ def getPageSizeConcurrently() = {
 
  for(i <- 1 to urls.size) {
    receive {
-     case (url, (size, links)) => {
-       println("Stats for " + url + ":")
-       println("  size  = "  + size)
-       println("  links = " + links)
-     }     
+     case (url:String, (size:Number, links:Number)) => {
+       printPageStats(url, size, links)
+     }
    }
  }
 }
