@@ -8,16 +8,22 @@ import org.ccil.cowan.tagsoup.jaxp.SAXFactoryImpl
 
 object PageLoader {
   def getPageStats(url : String) = {
-    val length = Source.fromURL(url).mkString.length
-    val links = (loadPage(url) \\ "a").toList.length
-    (length, links)
+    val contentAsString = loadPageAsString(url)
+    val contentAsXml = loadPageAsXml(url)
+    
+    (contentAsString.length,
+      (contentAsXml \\ "a").toList.length)
   }
 
-  def loadPage(url: String) = {
+  private def loadPageAsXml(url: String) = {
     val parser = (new SAXFactoryImpl).newSAXParser()
     val source = new InputSource(url)
     val adapter = new NoBindingFactoryAdapter
     adapter.loadXML(source, parser)
+  }
+  
+  private def loadPageAsString(url: String) = {
+    Source.fromURL(url).mkString
   }
 }
 
