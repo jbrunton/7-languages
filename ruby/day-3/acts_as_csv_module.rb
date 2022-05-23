@@ -1,3 +1,5 @@
+require 'irb'
+
 module ActsAsCsv
   def self.included(base)
     base.extend ClassMethods
@@ -6,6 +8,18 @@ module ActsAsCsv
   module ClassMethods
     def acts_as_csv
       include InstanceMethods
+    end
+  end
+
+  class CsvRow
+    def initialize(headers, row)
+      @headers = headers
+      @row = row
+    end
+
+    def method_missing(name)
+      col_index = @headers.index(name.to_s)
+      return @row[col_index] if col_index
     end
   end
   
@@ -17,8 +31,12 @@ module ActsAsCsv
       @headers = file.gets.chomp.split(', ')
 
       file.each do |row|
-        @csv_contents << row.chomp.split(', ')
+        @csv_contents << CsvRow.new(@headers, row.chomp.split(', '))
       end
+    end
+
+    def each(&block)
+      @csv_contents.each { |row| block.call(row) }
     end
     
     attr_accessor :headers, :csv_contents
@@ -33,7 +51,5 @@ class Example  # no inheritance! You can mix it in
   acts_as_csv
 end
 
-m = Example.new
-puts m.headers.inspect
-puts m.csv_contents.inspect
-
+csv = Example.new
+csv.each { |row| puts row.one }
